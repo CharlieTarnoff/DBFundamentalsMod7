@@ -12,7 +12,23 @@ A scalar function only returns a single value as an expression from a UDF. For e
 
 An inline function is a type of table-valued function and can only contain one select statement in it. It only returns a single set of rows. 
 
-A multi-statement function is a type of table-valued function and returns a table of data. The user is able to structure this table with a higher degree of freedom than an inline function. Unlike an inline function, a multi-statement function can use multiple select statements. 
+A multi-statement function is a type of table-valued function and returns a table of data. The user is able to structure this table with a higher degree of freedom than an inline function. Unlike an inline function, a multi-statement function can use multiple select statements. See below for an example of a multi-statement function.
+
+```
+CREATE FUNCTION dbo.fProductInventoriesWithPreviousMonthCountsWithKPIs(@CountVsPreviousCountKPI int)
+	RETURNS TABLE AS 
+	RETURN
+	SELECT TOP 100000
+		ProductName,
+		InventoryDate,
+		InventoryCount,
+		PreviousMonthCount,
+		CountVsPreviousCountKPI
+	FROM vProductInventoriesWithPreviousMonthCountsWithKPIs
+		WHERE CountVsPreviousCountKPI = 0
+	ORDER BY ProductName, Month(InventoryDate), InventoryCount
+GO
+```
 
 ## Summary
 I found Module 7 to be a challenging topic conceptually but saw the value that user defined functions can have when it comes to writing code in terms of time saved. I look forward to further practice with functions as they seem to be a common and useful tool with SQL.
